@@ -5,11 +5,17 @@ const { width } = Dimensions.get('window');
 
 const MyComponent = () => {
     const handlePress = () => {
-        fetch('http://192.168.1.182:3000/api/hello')
+        fetch('http://192.168.1.182:3000/api/addItem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ itemName: 'Yorgan' }), // Yeni eklenen öğenin adını burada belirtin
+        })
             .then(response => response.text())
             .then(data => {
                 console.log(data);
-                // Burada alınan geri dönüşü isteğin sonucu olarak kullanabilirsiniz
+                // Alınan yanıtı kullanabilirsiniz
             })
             .catch(error => console.error(error));
     };
@@ -50,4 +56,5 @@ const styles = StyleSheet.create({
 });
 
 export default MyComponent;
+
 
