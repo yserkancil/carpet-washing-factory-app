@@ -1,7 +1,6 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
-import { Entypo } from '@expo/vector-icons';
+import { Entypo,Feather,FontAwesome ,MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeNavigator from './HomeNavigator';
 
 const Tab =createBottomTabNavigator()
@@ -26,6 +25,34 @@ function RootNavigator() {
             )
          }}
       />
+      <Tab.Screen
+          name="Bildirimler"
+          component={HomeNavigator}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="search" size={24} color={color} />
+            ),
+          }}
+        />
+         <Tab.Screen
+          name="Sohbet"
+          component={HomeNavigator}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="user" size={24} color={color} />
+            ),
+          }}
+          
+        />
+             <Tab.Screen
+          name="İlanlarım"
+          component={HomeNavigator}
+          options={{
+            tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="gift" size={24} color={color} />            ),
+          }}
+        />
+
 
    </Tab.Navigator>
   )

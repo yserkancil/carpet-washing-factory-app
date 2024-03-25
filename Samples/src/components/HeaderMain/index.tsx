@@ -18,8 +18,8 @@ function index() {
         </View>
     
         <View style={styles.headerTwo}>
-            <Text style={{fontSize:16,color:'#5D3EBD',fontWeight:'bold',textAlign:'center',marginTop:5}}>Tarih:</Text>
-            <Text style={{fontSize:11,color:'#5D3EBD',fontWeight:'bold',textAlign:'center',marginTop:2}}>02.02.2024</Text>
+            <Text style={{fontSize:16,color:'white',fontWeight:'bold',textAlign:'center',marginTop:5}}>Tarih:</Text>
+            <Text style={{fontSize:11,color:'white',fontWeight:'bold',textAlign:'center',marginTop:2}}>02.02.2024</Text>
         </View>
 
     </View>

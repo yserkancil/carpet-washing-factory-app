@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Image, Text, StyleSheet, Dimensions } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
+import HomeNavigator from '../../navigators/HomeNavigator';
 const { width } = Dimensions.get('window');
 
 const MyComponent = () => {
@@ -19,11 +20,11 @@ const MyComponent = () => {
             })
             .catch(error => console.error(error));
     };
-
+     const navigation = useNavigation()
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={handlePress}
+            onPress={() =>navigation.navigate("CategoryDetails") }
         >
             <Image
                 style={styles.image}
