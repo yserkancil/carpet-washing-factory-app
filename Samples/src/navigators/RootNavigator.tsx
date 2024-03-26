@@ -11,10 +11,10 @@ function RootNavigator() {
    screenOptions={{
     tabBarHideOnKeyboard:true,
     tabBarShowLabel: false,
-    tabBarActiveTintColor:"#5C3EBC" ,
+    tabBarActiveTintColor:"#d93e0f" ,
     tabBarInactiveTintColor:"#959595",
     headerShown: false,
-    tabBarStyle:{ height: 80},
+    tabBarStyle:{ height: 80,backgroundColor:"#f2e2bd"},
    }}>
       <Tab.Screen
          name="Ana Sayfa"

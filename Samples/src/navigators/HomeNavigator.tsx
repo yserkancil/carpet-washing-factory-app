@@ -1,6 +1,6 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import {View,Image} from "react-native"
+import {View,Image,Text} from "react-native"
 import HomeScreen from "../../src/screens/HomeScreen"
 import CategoryFilterScren from "../../src/screens/CategoryFilterScreen"
 
@@ -12,10 +12,11 @@ function HomeNavigator() {
         name='Home'
         component={HomeScreen}
         options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
             <View style={{ alignItems: 'center' }}>
           <Image
-          style={{ width: 70, height: 50 }}
+          style={{ width: 70, height: 55 ,borderRadius:17,borderWidth:1,borderColor:"#e0a61d"}}
             source={require("../../assets/logo6.png")}
           />
           </View>
@@ -27,13 +28,10 @@ function HomeNavigator() {
         name='CategoryDetails'
         component={CategoryFilterScren}
         options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
-            <View style={{ alignItems: 'center' }}>
-          <Image
-          style={{ width: 70, height: 50 }}
-            source={require("../../assets/logo6.png")}
-          />
-          </View>
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Müşteri Kayıt Ekranı</Text>
+
           ),
          
         }}
