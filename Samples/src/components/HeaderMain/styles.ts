@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     headerMain:{
         height:height*0.064,
         flexDirection:'row',
-        backgroundColor:'#2498b5',
+        backgroundColor:'#f2e2bd',
         alignItems:'center',
         justifyContent:'space-between'
     },

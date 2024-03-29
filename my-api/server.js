@@ -19,6 +19,9 @@ app.post('/addItem', (req, res) => {
     }
   });
 });
+app.post('/anancı', (req, res) => {
+ console.log('anan')
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

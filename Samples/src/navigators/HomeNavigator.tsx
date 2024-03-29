@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import {View,Image,Text} from "react-native"
 import HomeScreen from "../../src/screens/HomeScreen"
 import CategoryFilterScren from "../../src/screens/CategoryFilterScreen"
+import ProductOne from "../screens/ProductOne"
 
 const Stack = createStackNavigator()
 function HomeNavigator() {
@@ -12,7 +13,7 @@ function HomeNavigator() {
         name='Home'
         component={HomeScreen}
         options={{
-          headerStyle: {backgroundColor:"#f2e2bd"},
+          headerStyle: {backgroundColor:"#eba009"},
           headerTitle: ()=>(
             <View style={{ alignItems: 'center' }}>
           <Image
@@ -32,10 +33,21 @@ function HomeNavigator() {
           headerTitle: ()=>(
             <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Müşteri Kayıt Ekranı</Text>
 
-          ),
-         
+          ),        
         }}
       />
+      <Stack.Screen 
+        name='AddProduct'
+        component={ProductOne}
+        options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
+          headerTitle: ()=>(
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Product1</Text>
+
+          ),        
+        }}
+      /> 
+      
     </Stack.Navigator>
   )
 }

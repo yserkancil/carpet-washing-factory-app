@@ -14,7 +14,7 @@ function RootNavigator() {
     tabBarActiveTintColor:"#d93e0f" ,
     tabBarInactiveTintColor:"#959595",
     headerShown: false,
-    tabBarStyle:{ height: 80,backgroundColor:"#f2e2bd"},
+    tabBarStyle:{ height: 80,backgroundColor:"#eba009"},
    }}>
       <Tab.Screen
          name="Ana Sayfa"
