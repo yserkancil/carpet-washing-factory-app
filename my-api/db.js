@@ -4,7 +4,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'password',
-  database: 'carpets'
+  database: 'mycarpetapp'
 });
 
 connection.connect(err => {
@@ -13,4 +13,3 @@ connection.connect(err => {
 });
 
 module.exports = connection;
-

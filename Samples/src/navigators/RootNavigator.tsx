@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Entypo,Feather,FontAwesome ,MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeNavigator from './HomeNavigator';
-
+import SearchNavigator from './SearchNaviagtor';
 const Tab =createBottomTabNavigator()
 
 function RootNavigator() {
@@ -26,8 +26,8 @@ function RootNavigator() {
          }}
       />
       <Tab.Screen
-          name="Bildirimler"
-          component={HomeNavigator}
+          name="Arama"
+          component={SearchNavigator}
           options={{
             tabBarIcon: ({ color }) => (
               <FontAwesome name="search" size={24} color={color} />
@@ -35,7 +35,7 @@ function RootNavigator() {
           }}
         />
          <Tab.Screen
-          name="Sohbet"
+          name="Aktif"
           component={HomeNavigator}
           options={{
             tabBarIcon: ({ color }) => (
@@ -45,7 +45,7 @@ function RootNavigator() {
           
         />
              <Tab.Screen
-          name="İlanlarım"
+          name="Hepsi"
           component={HomeNavigator}
           options={{
             tabBarIcon: ({ color }) => (

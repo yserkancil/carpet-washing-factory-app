@@ -8,7 +8,7 @@ const AddCarpet=() => {
     
     const Sum = () => {
         setResult(parseFloat(firstNumber) * parseFloat(secondNumber));
-        Alert.alert(`${firstNumber} x ${secondNumber} boyutundaki halınız listeye eklenmiştir`,'Diğer işleme geçebilirsiniz');
+        Alert.alert(`${firstNumber} x ${secondNumber} boyutundaki halınız listeye eklenmiştir`,'Diğer işleme geçebilirsiniz ');
         setFirstNumber('');
         setSecondNumber('');
         

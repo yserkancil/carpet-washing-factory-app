@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import {View,Image,Text} from "react-native"
 import HomeScreen from "../../src/screens/HomeScreen"
 import CategoryFilterScren from "../../src/screens/CategoryFilterScreen"
-import ProductOne from "../screens/ProductOne"
+import ProductOne from "../screens/AddCarpet"
 
 const Stack = createStackNavigator()
 function HomeNavigator() {
@@ -42,11 +42,12 @@ function HomeNavigator() {
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
-            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Product1</Text>
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Halı Ekle</Text>
 
           ),        
         }}
       /> 
+      
       
     </Stack.Navigator>
   )

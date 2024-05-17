@@ -20,10 +20,11 @@ const MyComponent = () => {
             })
             .catch(error => console.error(error));
     };
+
      const navigation = useNavigation()
     return (
      <ScrollView style={{backgroundColor:'#f2e2bd',marginTop:25}}>
-             <Button  onPress={() =>navigation.navigate("CategoryDetails")}mode='contained' 
+             <Button  onPress={() =>navigation.navigate("CategoryDetails")} mode='contained' 
                 style={{marginTop:0,backgroundColor:"#ed8709"}}
              >
             <Text >Müşteri Bilgilerini Girin</Text>
