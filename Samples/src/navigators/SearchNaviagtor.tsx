@@ -16,7 +16,7 @@ const SearchCustomerScreen = () => {
 
   const searchCustomer = async () => {
     try {
-      const response = await axios.get(`http://192.168.1.182:3000/customers?name_surname=${searchQuery}`);
+      const response = await axios.get(`http://192.168.1.190:3000/customers?name_surname=${searchQuery}`);
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -28,11 +28,21 @@ const SearchCustomerScreen = () => {
     setSearchQuery('');
   };
 
+  const deleteCustomer = async (name_surname: string) => {
+    try {
+      await axios.delete(`http://192.168.1.190:3000/customers?name_surname=${name_surname}`);
+      setSearchResults(searchResults.filter(customer => customer.name_surname !== name_surname));
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
+  };
+
   const renderItem = ({ item }: { item: Customer }) => (
     <TouchableOpacity style={styles.customerItem}>
       <Text style={styles.customerName}>{item.name_surname}</Text>
       <Text>{item.address}</Text>
       <Text>{item.phone_number}</Text>
+      <Button title="Sil" onPress={() => deleteCustomer(item.name_surname)} />
     </TouchableOpacity>
   );
 
@@ -80,4 +90,3 @@ const styles = StyleSheet.create({
 });
 
 export default SearchCustomerScreen;
-

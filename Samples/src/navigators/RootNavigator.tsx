@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Entypo,Feather,FontAwesome ,MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeNavigator from './HomeNavigator';
 import SearchNavigator from './SearchNaviagtor';
+import ActiveNavigator from './ActiveNavigator'
 const Tab =createBottomTabNavigator()
 
 function RootNavigator() {
@@ -36,7 +37,7 @@ function RootNavigator() {
         />
          <Tab.Screen
           name="Aktif"
-          component={HomeNavigator}
+          component={ActiveNavigator}
           options={{
             tabBarIcon: ({ color }) => (
               <FontAwesome name="user" size={24} color={color} />
@@ -45,7 +46,7 @@ function RootNavigator() {
           
         />
              <Tab.Screen
-          name="Hepsi"
+          name="Gelecek"
           component={HomeNavigator}
           options={{
             tabBarIcon: ({ color }) => (

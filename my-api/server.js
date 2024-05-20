@@ -7,6 +7,7 @@ const connection = require('./db');
 app.use(bodyParser.json());
 app.use(cors());
 
+// Müşteri ekleme
 app.post('/customers', (req, res) => {
     const { name_surname, phone_number, order_date, address } = req.body;
 
@@ -28,26 +29,56 @@ app.post('/customers', (req, res) => {
     });
 });
 
+// Müşteri arama ve listeleme
 app.get('/customers', (req, res) => {
-  const { name_surname } = req.query;
-  let sql = 'SELECT * FROM customer';
-  
-  if (name_surname) {
-    sql += ' WHERE name_surname LIKE ?';
-  }
-
-  connection.query(sql, [`%${name_surname}%`], (err, results) => {
-    if (err) {
-      console.error('MySQL query error:', err);
-      res.status(500).send('Internal server error');
-      return;
+    const { name_surname } = req.query;
+    let sql = 'SELECT * FROM customer';
+    
+    if (name_surname) {
+        sql += ' WHERE name_surname LIKE ?';
     }
-    res.json(results);
-  });
+
+    connection.query(sql, [`%${name_surname}%`], (err, results) => {
+        if (err) {
+            console.error('MySQL query error:', err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json(results);
+    });
+});
+
+// Müşteri silme
+app.delete('/customers/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM customer WHERE customer_id = ?';
+
+    connection.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('MySQL query error:', err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.status(200).send('Customer deleted successfully');
+    });
+});
+
+// Tüm müşterileri silme
+app.delete('/customers', (req, res) => {
+    const sql = 'DELETE FROM customer';
+
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error('MySQL query error:', err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.status(200).send('All customers deleted successfully');
+    });
 });
 
 app.get('/api', (req, res) => {
-  res.send('Api standing!');
+    res.send('Api standing!');
 });
 
 app.listen(3000, () => console.log('API çalışıyor...'));

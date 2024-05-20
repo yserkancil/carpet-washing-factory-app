@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
+import nextPage from './nextPage'
+
 
 function Index() {
   const [currentDate, setCurrentDate] = useState('');

@@ -18,7 +18,7 @@ function Index() {
       address: address
     };
 
-    axios.post('http://192.168.1.182:3000/customers',data )
+    axios.post('http://192.168.1.190:3000/customers',data )
   .then((response: AxiosResponse) => {
     console.log('Response:', response.data);
   })
