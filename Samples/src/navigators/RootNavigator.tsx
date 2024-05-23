@@ -4,6 +4,7 @@ import { Entypo,Feather,FontAwesome ,MaterialCommunityIcons } from '@expo/vector
 import HomeNavigator from './HomeNavigator';
 import SearchNavigator from './SearchNaviagtor';
 import ActiveNavigator from './ActiveNavigator'
+import FutureNavigator from './FutureNavigator';
 const Tab =createBottomTabNavigator()
 
 function RootNavigator() {
@@ -45,9 +46,9 @@ function RootNavigator() {
           }}
           
         />
-             <Tab.Screen
+        <Tab.Screen
           name="Gelecek"
-          component={HomeNavigator}
+          component={FutureNavigator}
           options={{
             tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="gift" size={24} color={color} />            ),

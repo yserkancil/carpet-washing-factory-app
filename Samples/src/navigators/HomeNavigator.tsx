@@ -2,9 +2,11 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import {View,Image,Text} from "react-native"
 import HomeScreen from "../../src/screens/HomeScreen"
-import CategoryFilterScren from "../../src/screens/CategoryFilterScreen"
-import ProductOne from "../screens/AddCarpet"
-
+import CustomerInformation from "../screens/CustomerInformation"
+import AddCarpet from '../screens/AddCarpet'
+import AddPilow  from '../screens/AddPilow'
+import AddRugs from   '../screens/AddRugs'
+import AddBlankets from   '../screens/AddBlankets'
 const Stack = createStackNavigator()
 function HomeNavigator() {
   return (
@@ -27,7 +29,7 @@ function HomeNavigator() {
         />
       <Stack.Screen 
         name='CategoryDetails'
-        component={CategoryFilterScren}
+        component={CustomerInformation}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -38,7 +40,7 @@ function HomeNavigator() {
       />
       <Stack.Screen 
         name='AddProduct'
-        component={ProductOne}
+        component={AddCarpet}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -47,7 +49,39 @@ function HomeNavigator() {
           ),        
         }}
       /> 
-      
+      <Stack.Screen 
+        name='AddPilow'
+        component={AddPilow}
+        options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
+          headerTitle: ()=>(
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Yorgan Ekle</Text>
+
+          ),        
+        }}
+      /> 
+      <Stack.Screen 
+        name='AddRugs'
+        component={AddRugs}
+        options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
+          headerTitle: ()=>(
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Kilim Ekle</Text>
+
+          ),        
+        }}
+      /> 
+      <Stack.Screen 
+        name='AddBlankets'
+        component={AddBlankets}
+        options={{
+          headerStyle: {backgroundColor:"#f2e2bd"},
+          headerTitle: ()=>(
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Battaniye Ekle</Text>
+
+          ),        
+        }}
+      /> 
       
     </Stack.Navigator>
   )

@@ -31,7 +31,7 @@ const AddCarpet = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Halı Ekle</Text>
+      <Text style={styles.title}>Kilim Ekle</Text>
       
       <TextInput
         style={styles.input}

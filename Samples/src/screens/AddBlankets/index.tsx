@@ -23,7 +23,7 @@ const AddBlanket = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Yorgan Ekle</Text>
+      <Text style={styles.title}>Battaniye Ekle</Text>
 
       <TextInput
         style={styles.input}

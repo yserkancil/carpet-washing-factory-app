@@ -5,21 +5,7 @@ import { Button } from 'react-native-paper';
 const { width } = Dimensions.get('window');
 
 const MyComponent = () => {
-    const handlePress = () => {
-        fetch('http://192.168.1.182:3000/api/addItem', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ itemName: 'Yorgan' }), // Yeni eklenen öğenin adını burada belirtin
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-                // Alınan yanıtı kullanabilirsiniz
-            })
-            .catch(error => console.error(error));
-    };
+
 
      const navigation = useNavigation()
     return (
@@ -44,7 +30,7 @@ const MyComponent = () => {
 
             <TouchableOpacity
             style={[styles.container,{marginLeft:40}]}
-            onPress={() =>navigation.navigate("AddProduct")}
+            onPress={() =>navigation.navigate("AddPilow")}
              >
             <Image
                 style={styles.image}
@@ -57,7 +43,7 @@ const MyComponent = () => {
            <View style={{flexDirection:"row"}}>
            <TouchableOpacity
             style={[styles.container,{marginLeft:50}]}
-            onPress={() =>navigation.navigate("AddProduct")}
+            onPress={() =>navigation.navigate("AddRugs")}
              >
             <Image
                 style={styles.image}
@@ -68,7 +54,7 @@ const MyComponent = () => {
 
             <TouchableOpacity
             style={[styles.container,{marginLeft:40}]}
-            onPress={() =>navigation.navigate("AddProduct")}
+            onPress={() =>navigation.navigate("AddBlankets")}
              >
             <Image
                 style={styles.image}

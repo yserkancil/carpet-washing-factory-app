@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, FlatList, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 
 interface Customer {
   customer_id: number;
@@ -10,17 +11,29 @@ interface Customer {
   phone_number: string;
 }
 
-const SearchCustomerScreen = () => {
+const SearchNavigator: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Customer[]>([]);
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const searchCustomer = async () => {
     try {
-      const response = await axios.get(`http://192.168.1.190:3000/customers?name_surname=${searchQuery}`);
+      const response = await axios.get(`http://192.168.1.149:3000/customers?name_surname=${searchQuery}`);
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
+  };
+
+  const handleDelete = (customerId: number) => {
+    axios.delete(`http://192.168.1.149:3000/customers/${customerId}`)
+      .then(() => {
+        setSearchResults(searchResults.filter(customer => customer.customer_id !== customerId));
+        navigation.goBack(); // Müşteriyi sildikten sonra ActiveNavigator'a dön ve listeyi güncelle
+      })
+      .catch(error => {
+        console.error('Error deleting customer:', error);
+      });
   };
 
   const clearResults = () => {
@@ -28,22 +41,17 @@ const SearchCustomerScreen = () => {
     setSearchQuery('');
   };
 
-  const deleteCustomer = async (name_surname: string) => {
-    try {
-      await axios.delete(`http://192.168.1.190:3000/customers?name_surname=${name_surname}`);
-      setSearchResults(searchResults.filter(customer => customer.name_surname !== name_surname));
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-    }
-  };
-
   const renderItem = ({ item }: { item: Customer }) => (
-    <TouchableOpacity style={styles.customerItem}>
-      <Text style={styles.customerName}>{item.name_surname}</Text>
-      <Text>{item.address}</Text>
-      <Text>{item.phone_number}</Text>
-      <Button title="Sil" onPress={() => deleteCustomer(item.name_surname)} />
-    </TouchableOpacity>
+    <View style={styles.customerItem}>
+      <View>
+        <Text style={styles.customerName}>{item.name_surname}</Text>
+        <Text>{item.address}</Text>
+        <Text>{item.phone_number}</Text>
+      </View>
+      <TouchableOpacity onPress={() => handleDelete(item.customer_id)} style={styles.deleteButton}>
+        <Text style={styles.deleteButtonText}>Sil</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -54,8 +62,10 @@ const SearchCustomerScreen = () => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
-      <Button title="Ara" onPress={searchCustomer} />
-      <Button title="Temizle" onPress={clearResults} />
+      <View style={styles.buttonContainer}>
+        <Button title="Ara" onPress={searchCustomer} />
+        <Button title="Temizle" onPress={clearResults} />
+      </View>
       <FlatList
         data={searchResults}
         renderItem={renderItem}
@@ -67,26 +77,48 @@ const SearchCustomerScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 25,
     flex: 1,
+    marginTop:20,
     padding: 20,
+    backgroundColor: '#f2e2bd',
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginBottom: 20,
+    paddingHorizontal: 15,
+    backgroundColor: 'white',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   customerItem: {
-    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
   customerName: {
     fontWeight: 'bold',
+    fontSize: 16,
     marginBottom: 5,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
-export default SearchCustomerScreen;
+export default SearchNavigator;

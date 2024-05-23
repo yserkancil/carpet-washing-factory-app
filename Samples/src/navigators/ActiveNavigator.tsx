@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 
 interface Customer {
   customer_id: number;
@@ -10,59 +11,45 @@ interface Customer {
   phone_number: string;
 }
 
-const ActiveNavigator = () => {
+const ActiveNavigator: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
-
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://192.168.1.190:3000/customers');
+      const response = await axios.get('http://192.168.1.149:3000/customers');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
   };
 
-  const deleteCustomer = async (id: number) => {
-    try {
-      await axios.delete(`http://192.168.1.190:3000/customers/${id}`);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       fetchCustomers();
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-    }
-  };
+    });
 
-  const deleteAllCustomers = async () => {
-    Alert.alert(
-      'Tüm müşterileri sil',
-      'Bu işlem geri alınamaz. Emin misiniz?',
-      [
-        { text: 'İptal', style: 'cancel' },
-        { text: 'Evet', onPress: async () => {
-            try {
-              await axios.delete('http://192.168.1.190:3000/customers');
-              fetchCustomers();
-            } catch (error) {
-              console.error('Error deleting all customers:', error);
-            }
-          }
-        },
-      ],
-      { cancelable: false }
-    );
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleDelete = (customerId: number) => {
+    axios.delete(`http://192.168.1.149:3000/customers/${customerId}`)
+      .then(() => {
+        fetchCustomers(); // Müşteri silindikten sonra listeyi güncelle
+      })
+      .catch(error => {
+        console.error('Error deleting customer:', error);
+      });
   };
 
   const renderItem = ({ item }: { item: Customer }) => (
     <View style={styles.customerItem}>
-      <View style={styles.customerInfo}>
+      <View>
         <Text style={styles.customerName}>{item.name_surname}</Text>
         <Text>{item.address}</Text>
         <Text>{item.phone_number}</Text>
       </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => deleteCustomer(item.customer_id)}>
+      <TouchableOpacity onPress={() => handleDelete(item.customer_id)} style={styles.deleteButton}>
         <Text style={styles.deleteButtonText}>Sil</Text>
       </TouchableOpacity>
     </View>
@@ -70,74 +57,105 @@ const ActiveNavigator = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Aktif Müşterileriniz</Text>
-      <View style={styles.separator} />
-      <TouchableOpacity style={styles.deleteAllButton} onPress={deleteAllCustomers}>
-        <Text style={styles.deleteAllButtonText}>Tüm Müşterileri Sil</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Aktif Müşterileriniz</Text>
+      <View style={styles.divider} />
       <FlatList
         data={customers}
         renderItem={renderItem}
         keyExtractor={item => item.customer_id.toString()}
       />
+      <TouchableOpacity
+        onPress={() => {
+          Alert.alert(
+            'Onay',
+            'Tüm müşterileri silmek istediğinizden emin misiniz?',
+            [
+              {
+                text: 'Hayır',
+                style: 'cancel',
+              },
+              {
+                text: 'Evet',
+                onPress: () => {
+                  axios.delete('http://192.168.1.149:3000/customers')
+                    .then(() => {
+                      setCustomers([]);
+                    })
+                    .catch(error => {
+                      console.error('Error deleting all customers:', error);
+                    });
+                },
+              },
+            ]
+          );
+        }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Tüm Depoyu Sil</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 25,
     flex: 1,
     padding: 20,
+    backgroundColor: '#f2e2bd',
   },
-  header: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: 'center',
+    color: '#333',
   },
-  separator: {
+  divider: {
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: '#333',
     marginBottom: 20,
   },
   customerItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
     marginBottom: 10,
-  },
-  customerInfo: {
-    flex: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   customerName: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    color: '#333',
   },
   deleteButton: {
-    backgroundColor: '#ff3333',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    backgroundColor: 'red',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderRadius: 5,
   },
   deleteButtonText: {
     color: 'white',
     fontWeight: 'bold',
   },
-  deleteAllButton: {
-    backgroundColor: '#ff3333',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: 'center',
-    marginBottom: 20,
+  button: {
+    backgroundColor: '#ed8709',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 10,
+    marginTop: 20,
   },
-  deleteAllButtonText: {
+  buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

@@ -16,9 +16,9 @@ function Index() {
       phone_number: phone,
       order_date: purchaseDate,
       address: address
-    };
+    };  
 
-    axios.post('http://192.168.1.190:3000/customers',data )
+    axios.post('http://192.168.1.149:3000/customers',data ,{timeout: 10000})
   .then((response: AxiosResponse) => {
     console.log('Response:', response.data);
   })
@@ -32,8 +32,7 @@ function Index() {
       if (response.status === 200) {
         Alert.alert("Müşteri listeye eklenmiştir. Artık müşteri ürünlerini ekleyebilirsiniz");
       } else {
-        Alert.alert("anan");
-
+        Alert.alert("sf");
        // throw new Error('Müşteri eklenirken bir hata oluştu.');
       }
     } catch (error) {
@@ -51,7 +50,7 @@ function Index() {
         <TextInput label="Telefon" style={{ marginTop: 12, backgroundColor: "white" }}
           value={phone} onChangeText={(text) => setPhone(text)}
         />
-        <TextInput label="Ürün Alış Tarihi" style={{ marginTop: 12, backgroundColor: "white" }}
+        <TextInput label="Ürün Alis Tarihi" style={{ marginTop: 12, backgroundColor: "white" }}
           value={purchaseDate} onChangeText={(text) => setPurchaseDate(text)}
         />
         <TextInput label="Adres" style={{ marginTop: 12, backgroundColor: "white" }}
