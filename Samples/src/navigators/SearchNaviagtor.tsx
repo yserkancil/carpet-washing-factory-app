@@ -9,6 +9,7 @@ interface Customer {
   order_date: string;
   address: string;
   phone_number: string;
+  order_number: number;
 }
 
 const SearchNavigator: React.FC = () => {
@@ -47,6 +48,7 @@ const SearchNavigator: React.FC = () => {
         <Text style={styles.customerName}>{item.name_surname}</Text>
         <Text>{item.address}</Text>
         <Text>{item.phone_number}</Text>
+        <Text>{item.order_number}</Text>
       </View>
       <TouchableOpacity onPress={() => handleDelete(item.customer_id)} style={styles.deleteButton}>
         <Text style={styles.deleteButtonText}>Sil</Text>

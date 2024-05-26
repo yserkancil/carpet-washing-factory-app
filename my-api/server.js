@@ -15,7 +15,7 @@ app.post('/customers', (req, res) => {
         name_surname,
         order_date,
         address,
-        phone_number
+        phone_number,
     };
 
     const sql = 'INSERT INTO customer SET ?';
@@ -25,7 +25,8 @@ app.post('/customers', (req, res) => {
             res.status(500).send('Internal server error');
             return;
         }
-        res.status(200).json(newCustomer);
+        // customer_id'yi yanıt olarak döndür
+        res.status(200).json({ ...newCustomer, customer_id: result.insertId });
     });
 });
 
@@ -45,6 +46,28 @@ app.get('/customers', (req, res) => {
             return;
         }
         res.json(results);
+    });
+});
+
+// Halı ekleme
+app.post('/carpets', (req, res) => {
+    const { customer_id, length, width, price_per_square_meter } = req.body;
+
+    const newCarpet = {
+        customer_id,
+        length,
+        width,
+        price_per_square_meter,
+    };
+
+    const sql = 'INSERT INTO carpet SET ?';
+    connection.query(sql, newCarpet, (err, result) => {
+        if (err) {
+            console.error('MySQL query error:', err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.status(200).json(newCarpet);
     });
 });
 

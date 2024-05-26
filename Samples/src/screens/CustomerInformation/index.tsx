@@ -1,44 +1,37 @@
 import React, { useState } from 'react';
 import { ScrollView, ImageBackground, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
-function Index() {
+function CustomerInformation() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [purchaseDate, setPurchaseDate] = useState('');
   const [address, setAddress] = useState('');
 
   const handleButtonPress = async () => {
-
-    const data = {
-      name_surname: name,
-      phone_number: phone,
-      order_date: purchaseDate,
-      address: address
-    };  
-
-    axios.post('http://192.168.1.149:3000/customers',data ,{timeout: 10000})
-  .then((response: AxiosResponse) => {
-    console.log('Response:', response.data);
-  })
-  .catch((error: any) => {
-    console.error('Error:', error); 
-  });
-
- 
-
-/*
-      if (response.status === 200) {
-        Alert.alert("Müşteri listeye eklenmiştir. Artık müşteri ürünlerini ekleyebilirsiniz");
-      } else {
-        Alert.alert("sf");
-       // throw new Error('Müşteri eklenirken bir hata oluştu.');
-      }
+    try {
+      const response = await axios.post('http://192.168.1.150:3000/customers', {
+        name_surname: name,
+        phone_number: phone,
+        order_date: purchaseDate,
+        address: address,
+      });
+      // Handle success
+      const {customer_id} = response.data;
+      console.log('Response:', response.data);
+      Alert.alert('Success', `Customer added successfully. Your customer number is ${customer_id}`);
     } catch (error) {
-      Alert.alert("Bir hata oluştu. Müşteri eklenemedi."+error);
-      console.error(error); 
-    }*/
+      // Handle error
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to add customer.');
+    }
+
+    // Clear inputs after submission
+    setName('');
+    setPhone('');
+    setPurchaseDate('');
+    setAddress('');
   };
 
   return (
@@ -50,7 +43,7 @@ function Index() {
         <TextInput label="Telefon" style={{ marginTop: 12, backgroundColor: "white" }}
           value={phone} onChangeText={(text) => setPhone(text)}
         />
-        <TextInput label="Ürün Alis Tarihi" style={{ marginTop: 12, backgroundColor: "white" }}
+        <TextInput label="Ürün Alış Tarihi" style={{ marginTop: 12, backgroundColor: "white" }}
           value={purchaseDate} onChangeText={(text) => setPurchaseDate(text)}
         />
         <TextInput label="Adres" style={{ marginTop: 12, backgroundColor: "white" }}
@@ -68,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+export default CustomerInformation;

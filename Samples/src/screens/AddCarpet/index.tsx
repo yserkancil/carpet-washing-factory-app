@@ -1,29 +1,36 @@
+// AddCarpet.tsx
+
 import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import axios from 'axios'; // Import axios for HTTP requests
 
-const AddCarpet = () => {
-  const [orderNumber, setOrderNumber] = useState('');
+const AddCarpet =() => {
+  const [customerId, setCustomerId] = useState('');
   const [firstNumber, setFirstNumber] = useState('');
   const [secondNumber, setSecondNumber] = useState('');
   const [pricePerSquareMeter, setPricePerSquareMeter] = useState('');
-  const [result, setResult] = useState<number | null>(null);
-  const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const Sum = () => {
-    const area = parseFloat(firstNumber) * parseFloat(secondNumber);
-    const total = area * parseFloat(pricePerSquareMeter);
-    
-    setResult(area);
-    setTotalPrice(total);
-    
-    Alert.alert(
-      `Sipariş No: ${orderNumber}`,
-      `${firstNumber} x ${secondNumber} boyutundaki halınız listeye eklenmiştir. Metrekare fiyatı: ${pricePerSquareMeter} TL. Toplam fiyat: ${total} TL.`,
-      [{ text: 'Tamam' }]
-    );
+  const handleAddCarpet = async () => {
+    try {
+      const response = await axios.post('http://192.168.1.150:3000/carpets', {
+        customer_id: customerId,
+        length: parseFloat(firstNumber),
+        width: parseFloat(secondNumber),
+        price_per_square_meter: parseFloat(pricePerSquareMeter),
+        
+      });
 
-    // Clear the inputs
-    setOrderNumber('');
+      // Handle success
+      console.log('Response:', response.data);
+      Alert.alert('Success', 'Carpet added successfully.');
+    } catch (error) {
+      // Handle error
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to add carpet.');
+    }
+
+    // Clear inputs after submission
+    setCustomerId('');
     setFirstNumber('');
     setSecondNumber('');
     setPricePerSquareMeter('');
@@ -31,14 +38,14 @@ const AddCarpet = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Halı Ekle</Text>
+      <Text style={styles.title}>Add Carpet</Text>
       
       <TextInput
         style={styles.input}
         keyboardType='number-pad'
-        onChangeText={setOrderNumber}
-        value={orderNumber}
-        placeholder="Sipariş Numarası"
+        onChangeText={setCustomerId}
+        value={customerId}
+        placeholder="Müşteri Numarası"
       />
 
       <TextInput
@@ -46,7 +53,7 @@ const AddCarpet = () => {
         keyboardType='number-pad'
         onChangeText={setFirstNumber}
         value={firstNumber}
-        placeholder="En"
+        placeholder="Genişlik"
       />
 
       <TextInput
@@ -54,7 +61,7 @@ const AddCarpet = () => {
         keyboardType='number-pad'
         onChangeText={setSecondNumber}
         value={secondNumber}
-        placeholder="Boy"
+        placeholder="Uzunluk"
       />
 
       <TextInput
@@ -62,7 +69,7 @@ const AddCarpet = () => {
         keyboardType='number-pad'
         onChangeText={setPricePerSquareMeter}
         value={pricePerSquareMeter}
-        placeholder="Metrekare Fiyatı (TL)"
+        placeholder="Metrekare fiyatı (TL)"
       />
 
       <Pressable
@@ -74,20 +81,10 @@ const AddCarpet = () => {
             shadowOffset: pressed ? { width: 0, height: 1 } : { width: 0, height: 3 },
           },
         ]}
-        onPress={Sum}
+        onPress={handleAddCarpet}
       >
-        <Text style={styles.buttonText}>Ekle</Text>
+        <Text style={styles.buttonText}>Add</Text>
       </Pressable>
-
-      {result !== null && (
-        <View style={styles.resultContainer}>
-          <Text style={styles.resultText}>Sipariş No: {orderNumber}</Text>
-          <Text style={styles.resultText}>İlk Numara: {firstNumber}</Text>
-          <Text style={styles.resultText}>İkinci Numara: {secondNumber}</Text>
-          <Text style={styles.resultText}>Sonuç: {result} metrekare</Text>
-          <Text style={styles.resultText}>Toplam Fiyat: {totalPrice} TL</Text>
-        </View>
-      )}
     </View>
   );
 };
@@ -134,17 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  resultContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  resultText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
 });
 
 export default AddCarpet;
-
