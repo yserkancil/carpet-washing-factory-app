@@ -9,7 +9,26 @@ interface Customer {
   order_date: string;
   address: string;
   phone_number: string;
-  order_number: number;
+  carpets: Array<{
+    carpet_id: number;
+    length: number;
+    width: number;
+    price_per_square_meter: number;
+  }>;
+  rugs: Array<{
+    rug_id: number;
+    length: number;
+    width: number;
+    price_per_square_meter: number;
+  }>;
+  pillows: Array<{
+    unit_number: number;
+    price_per_square_meter: number;
+  }>;
+  blankets: Array<{
+    unit_number: number;
+    price_per_square_meter: number;
+  }>;
 }
 
 const ActiveNavigator: React.FC = () => {
@@ -18,7 +37,7 @@ const ActiveNavigator: React.FC = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://192.168.1.149:3000/customers');
+      const response = await axios.get('http://192.168.1.127:3000/customers');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -34,9 +53,9 @@ const ActiveNavigator: React.FC = () => {
   }, [navigation]);
 
   const handleDelete = (customerId: number) => {
-    axios.delete(`http://192.168.1.149:3000/customers/${customerId}`)
+    axios.delete(`http://192.168.1.127:3000/customers/${customerId}`)
       .then(() => {
-        fetchCustomers(); // Müşteri silindikten sonra listeyi güncelle
+        fetchCustomers();
       })
       .catch(error => {
         console.error('Error deleting customer:', error);
@@ -49,7 +68,57 @@ const ActiveNavigator: React.FC = () => {
         <Text style={styles.customerName}>{item.name_surname}</Text>
         <Text>{item.address}</Text>
         <Text>{item.phone_number}</Text>
-        <Text>{item.order_number}</Text>
+        <Text>{item.customer_id}</Text>
+
+        {item.carpets.length > 0 && (
+          <View>
+            <Text style={styles.productTitle}>Halılar:</Text>
+            {item.carpets.map((carpet, index) => (
+              <View key={`carpet-${carpet.carpet_id}-${index}`} style={styles.productInfo}>
+                <Text>Halı ID: {carpet.carpet_id}</Text>
+                <Text>Boyut: {carpet.length} x {carpet.width} m</Text>
+                <Text>Fiyat/m²: {carpet.price_per_square_meter} ₺</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {item.rugs.length > 0 && (
+          <View>
+            <Text style={styles.productTitle}>Kilimler:</Text>
+            {item.rugs.map((rug, index) => (
+              <View key={`rug-${rug.rug_id}-${index}`} style={styles.productInfo}>
+                <Text>Kilim ID: {rug.rug_id}</Text>
+                <Text>Boyut: {rug.length} x {rug.width} m</Text>
+                <Text>Fiyat/m²: {rug.price_per_square_meter} ₺</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {item.pillows.length > 0 && (
+          <View>
+            <Text style={styles.productTitle}>Yorganlar:</Text>
+            {item.pillows.map((pillow, index) => (
+              <View key={`pillow-${pillow.unit_number}-${index}`} style={styles.productInfo}>
+                <Text>Yastık Adet: {pillow.unit_number}</Text>
+                <Text>Birim Fiyat: {pillow.price_per_square_meter} ₺</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {item.blankets.length > 0 && (
+          <View>
+            <Text style={styles.productTitle}>Battaniyeler:</Text>
+            {item.blankets.map((blanket, index) => (
+              <View key={`blanket-${blanket.unit_number}-${index}`} style={styles.productInfo}>
+                <Text>Battaniye Adet: {blanket.unit_number}</Text>
+                <Text>Fiyat/adet: {blanket.price_per_square_meter} ₺</Text>
+              </View>
+            ))}
+          </View>
+        )}
       </View>
       <TouchableOpacity onPress={() => handleDelete(item.customer_id)} style={styles.deleteButton}>
         <Text style={styles.deleteButtonText}>Sil</Text>
@@ -79,7 +148,7 @@ const ActiveNavigator: React.FC = () => {
               {
                 text: 'Evet',
                 onPress: () => {
-                  axios.delete('http://192.168.1.149:3000/customers')
+                  axios.delete('http://192.168.1.127:3000/customers')
                     .then(() => {
                       setCustomers([]);
                     })
@@ -136,6 +205,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+  },
+  productTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: '#333',
+  },
+  productInfo: {
+    marginLeft: 10,
+    marginBottom: 5,
   },
   deleteButton: {
     backgroundColor: 'red',

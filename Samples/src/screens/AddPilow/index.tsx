@@ -1,7 +1,8 @@
-import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-const AddBlanket = () => {
+const AddPillow = () => {
   const [orderId, setOrderId] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
@@ -12,9 +13,22 @@ const AddBlanket = () => {
     setTotalPrice(total);
 
     Alert.alert(
-      `Sipariş Numarası: ${orderId}`,
+      `Ürün ${orderId} numaralı müşteriye başarıyla eklendi`,
       `Ürün Adeti: ${quantity}\nBirim Fiyatı: ${price} ₺\nToplam Fiyat: ${total} ₺`
     );
+
+    // Yeni yorganı sunucuya gönder
+    axios.post('http://192.168.1.118:3000/pillows', {
+      unit_number: parseFloat(quantity), // Unit number olarak adet kullanılacak
+      price_per_square_meter: parseFloat(price),
+      customer_id: parseFloat(orderId),
+    })
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error('Error adding pillow:', error);
+    });
 
     setOrderId('');
     setQuantity('');
@@ -108,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddBlanket;
+export default AddPillow;

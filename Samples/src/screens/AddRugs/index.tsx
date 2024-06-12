@@ -1,32 +1,38 @@
-import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-const AddCarpet = () => {
-  const [orderNumber, setOrderNumber] = useState('');
-  const [firstNumber, setFirstNumber] = useState('');
-  const [secondNumber, setSecondNumber] = useState('');
+const AddRug = () => {
+  const [customerID, setCustomerID] = useState('');
+  const [length, setLength] = useState('');
+  const [width, setWidth] = useState('');
   const [pricePerSquareMeter, setPricePerSquareMeter] = useState('');
-  const [result, setResult] = useState<number | null>(null);
-  const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const Sum = () => {
-    const area = parseFloat(firstNumber) * parseFloat(secondNumber);
-    const total = area * parseFloat(pricePerSquareMeter);
-    
-    setResult(area);
-    setTotalPrice(total);
-    
-    Alert.alert(
-      `Sipariş No: ${orderNumber}`,
-      `${firstNumber} x ${secondNumber} boyutundaki halınız listeye eklenmiştir. Metrekare fiyatı: ${pricePerSquareMeter} TL. Toplam fiyat: ${total} TL.`,
-      [{ text: 'Tamam' }]
-    );
-
-    // Clear the inputs
-    setOrderNumber('');
-    setFirstNumber('');
-    setSecondNumber('');
-    setPricePerSquareMeter('');
+  const addRug = async () => {
+    try {
+      const response = await axios.post('http://192.168.1.118:3000/rugs', {
+        customer_id: customerID,
+        length: parseFloat(length),
+        width: parseFloat(width),
+        price_per_square_meter: parseFloat(pricePerSquareMeter),
+      });
+      Alert.alert(
+        'Success',
+        'Kilim başarıyla eklendi.',
+        [{ text: 'OK' }]
+      );
+      setCustomerID('');
+      setLength('');
+      setWidth('');
+      setPricePerSquareMeter('');
+    } catch (error) {
+      console.error('Error adding rug:', error);
+      Alert.alert(
+        'Error',
+        'Kilim eklenirken bir hata oluştu.',
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   return (
@@ -36,25 +42,25 @@ const AddCarpet = () => {
       <TextInput
         style={styles.input}
         keyboardType='number-pad'
-        onChangeText={setOrderNumber}
-        value={orderNumber}
-        placeholder="Sipariş Numarası"
+        onChangeText={setCustomerID}
+        value={customerID}
+        placeholder="Müşteri Numarası"
       />
 
       <TextInput
         style={styles.input}
         keyboardType='number-pad'
-        onChangeText={setFirstNumber}
-        value={firstNumber}
-        placeholder="En"
+        onChangeText={setLength}
+        value={length}
+        placeholder="Uzunluk (metre)"
       />
 
       <TextInput
         style={styles.input}
         keyboardType='number-pad'
-        onChangeText={setSecondNumber}
-        value={secondNumber}
-        placeholder="Boy"
+        onChangeText={setWidth}
+        value={width}
+        placeholder="Genişlik (metre)"
       />
 
       <TextInput
@@ -66,28 +72,11 @@ const AddCarpet = () => {
       />
 
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          {
-            transform: [pressed ? { translateY: 10 } : { translateY: 0 }],
-            shadowOpacity: pressed ? 0.1 : 0.25,
-            shadowOffset: pressed ? { width: 0, height: 1 } : { width: 0, height: 3 },
-          },
-        ]}
-        onPress={Sum}
+        style={styles.button}
+        onPress={addRug}
       >
         <Text style={styles.buttonText}>Ekle</Text>
       </Pressable>
-
-      {result !== null && (
-        <View style={styles.resultContainer}>
-          <Text style={styles.resultText}>Sipariş No: {orderNumber}</Text>
-          <Text style={styles.resultText}>İlk Numara: {firstNumber}</Text>
-          <Text style={styles.resultText}>İkinci Numara: {secondNumber}</Text>
-          <Text style={styles.resultText}>Sonuç: {result} metrekare</Text>
-          <Text style={styles.resultText}>Toplam Fiyat: {totalPrice} TL</Text>
-        </View>
-      )}
     </View>
   );
 };
@@ -126,25 +115,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-    shadowRadius: 3.5,
-    shadowColor: 'black',
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  resultContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  resultText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
 });
 
-export default AddCarpet;
-
+export default AddRug;

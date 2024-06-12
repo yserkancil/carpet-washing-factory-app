@@ -12,7 +12,7 @@ const AddCarpet =() => {
 
   const handleAddCarpet = async () => {
     try {
-      const response = await axios.post('http://192.168.1.150:3000/carpets', {
+      const response = await axios.post('http://192.168.1.118:3000/carpets', {
         customer_id: customerId,
         length: parseFloat(firstNumber),
         width: parseFloat(secondNumber),
@@ -83,7 +83,7 @@ const AddCarpet =() => {
         ]}
         onPress={handleAddCarpet}
       >
-        <Text style={styles.buttonText}>Add</Text>
+        <Text style={styles.buttonText}>Ekle</Text>
       </Pressable>
     </View>
   );

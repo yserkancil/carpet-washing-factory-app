@@ -11,7 +11,7 @@ function CustomerInformation() {
 
   const handleButtonPress = async () => {
     try {
-      const response = await axios.post('http://192.168.1.150:3000/customers', {
+      const response = await axios.post('http://192.168.1.118:3000/customers', {
         name_surname: name,
         phone_number: phone,
         order_date: purchaseDate,

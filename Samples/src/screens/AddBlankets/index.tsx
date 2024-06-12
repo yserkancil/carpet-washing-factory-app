@@ -1,24 +1,36 @@
 import { View, Text, Pressable, TextInput, Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const AddBlanket = () => {
-  const [orderId, setOrderId] = useState('');
+  const [customerId, setCustomerId] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const total = parseFloat(quantity) * parseFloat(price);
     setTotalPrice(total);
 
-    Alert.alert(
-      `Sipariş Numarası: ${orderId}`,
-      `Ürün Adeti: ${quantity}\nBirim Fiyatı: ${price} ₺\nToplam Fiyat: ${total} ₺`
-    );
+    try {
+      await axios.post('http://192.168.1.118:3000/blankets', {
+        customer_id: customerId,
+        price_per_square_meter: parseFloat(quantity),
+        unit_number: parseFloat(price),
+      });
 
-    setOrderId('');
-    setQuantity('');
-    setPrice('');
+      Alert.alert(
+        `Sipariş Numarası: ${customerId}`,
+        `Ürün Adeti: ${quantity}\nBirim Fiyatı: ${price} ₺\nToplam Fiyat: ${total} ₺`
+      );
+
+      setCustomerId('');
+      setQuantity('');
+      setPrice('');
+    } catch (error) {
+      console.error('Error adding kilim:', error);
+      Alert.alert('Error', 'An error occurred while adding the kilim.');
+    }
   };
 
   return (
@@ -27,20 +39,20 @@ const AddBlanket = () => {
 
       <TextInput
         style={styles.input}
-        placeholder="Sipariş Numarası"
-        onChangeText={setOrderId}
-        value={orderId}
+        placeholder="Müşteri ID"
+        onChangeText={setCustomerId}
+        value={customerId}
       />
       <TextInput
         style={styles.input}
-        placeholder="Ürün Adet Sayısı"
+        placeholder="Birim Fiyatı (₺)"
         keyboardType='number-pad'
         onChangeText={setQuantity}
         value={quantity}
       />
       <TextInput
         style={styles.input}
-        placeholder="Birim Fiyatı (₺)"
+        placeholder="Ürün Adet Sayısı"
         keyboardType='number-pad'
         onChangeText={setPrice}
         value={price}
