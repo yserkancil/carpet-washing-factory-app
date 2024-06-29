@@ -10,27 +10,27 @@ const MyComponent = () => {
      const navigation = useNavigation()
     return (
      <ScrollView style={{backgroundColor:'#f2e2bd',marginTop:25}}>
-             <Button  onPress={() =>navigation.navigate("CategoryDetails")} mode='contained' 
+             <Button  onPress={() =>navigation.navigate("Information")} mode='contained' 
                 style={{marginTop:0,backgroundColor:"#ed8709"}}
              >
-            <Text >Müşteri Bilgilerini Girin</Text>
+            <Text >Sipariş Durumunu Sorgula</Text>
             </Button>
            
            <View style={{flexDirection:"row"}}>
             <TouchableOpacity
             style={[styles.container,{marginLeft:50}]}
-            onPress={() =>navigation.navigate("AddProduct")}
+            onPress={() =>navigation.navigate("AddCarpetC")}
              >
             <Image
                 style={styles.image}
                 source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuE01O1sK7nmDVfj-uPVHBf3m2A9gYGH5OCQ&usqp=CAU" }}
             />
-            <Text style={styles.text}>Halı ekle</Text>
+            <Text style={styles.text}>Halı Ekle</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
             style={[styles.container,{marginLeft:40}]}
-            onPress={() =>navigation.navigate("AddPilow")}
+            onPress={() =>navigation.navigate("AddPilowC")}
              >
             <Image
                 style={styles.image}
@@ -43,7 +43,7 @@ const MyComponent = () => {
            <View style={{flexDirection:"row"}}>
            <TouchableOpacity
             style={[styles.container,{marginLeft:50}]}
-            onPress={() =>navigation.navigate("AddRugs")}
+            onPress={() =>navigation.navigate("AddRugsC")}
              >
             <Image
                 style={styles.image}
@@ -54,7 +54,7 @@ const MyComponent = () => {
 
             <TouchableOpacity
             style={[styles.container,{marginLeft:40}]}
-            onPress={() =>navigation.navigate("AddBlankets")}
+            onPress={() =>navigation.navigate("AddBlanketsC")}
              >
             <Image
                 style={styles.image}
@@ -63,11 +63,11 @@ const MyComponent = () => {
             <Text style={styles.text}>Battaniye Ekle</Text>
             </TouchableOpacity>  
            </View>
-           <Button  onPress={() =>navigation.navigate("Orders")}mode='contained' 
+           <Button  onPress={() =>navigation.navigate("OrderDetails")}mode='contained' 
                 style={{marginTop:2,backgroundColor:"#ed8709"}}
              >
-            <Text >Siparişleri Görüntüle</Text>
-            </Button>
+            <Text >Siparişinizi Tamamlayın</Text>
+           </Button>
        
      </ScrollView>
 
@@ -100,3 +100,4 @@ const styles = StyleSheet.create({
 export default MyComponent;
 
 
+/* */ 

@@ -1,15 +1,15 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import {View,Image,Text} from "react-native"
-import HomeScreen from "../../src/screens/HomeScreen"
-import CustomerInformation from "../screens/CustomerInformation"
-import AddCarpet from '../screens/AddCarpet'
-import AddPilow  from '../screens/AddPilow'
-import AddRugs from   '../screens/AddRugs'
-import AddBlankets from   '../screens/AddBlankets'
-import Orders from '../screens/ShowOrders'
+import HomeScreen from "../../../src/screens/CustomerSide/HomeScreen"
+import Information from "../../../src/screens/CustomerSide/Information"
+import AddCarpetC from '"../../../src/screens/CustomerSide/AddCarpetC'
+import AddPilowC  from '../../../src/screens/CustomerSide/AddPilowC'
+import AddRugsC from   '../../../src/screens/CustomerSide/AddRugsC'
+import AddBlanketsC from   '../../../src/screens/CustomerSide/AddBlanketsC'
+import OrderDetails from   '../../../src/screens/CustomerSide/OrderDetails'
 const Stack = createStackNavigator()
-function HomeNavigator() {
+function HomeNavigatorC() {
   return (
     <Stack.Navigator>
         <Stack.Screen 
@@ -21,7 +21,7 @@ function HomeNavigator() {
             <View style={{ alignItems: 'center' }}>
           <Image
           style={{ width: 70, height: 55 ,borderRadius:17,borderWidth:1,borderColor:"#e0a61d"}}
-            source={require("../../assets/logo6.png")}
+            source={require("../../../assets/logo6.png")}
           />
           </View>
           ),
@@ -29,19 +29,19 @@ function HomeNavigator() {
         }}
         />
       <Stack.Screen 
-        name='CategoryDetails'
-        component={CustomerInformation}
+        name='Information'
+        component={Information}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
-            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Müşteri Kayıt Ekranı</Text>
+            <Text style={{fontWeight:'bold',fontSize:15,color:"black"}}>Ana Sayfa</Text>
 
           ),        
         }}
       />
       <Stack.Screen 
-        name='AddProduct'
-        component={AddCarpet}
+        name='AddCarpetC'
+        component={AddCarpetC}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -51,8 +51,8 @@ function HomeNavigator() {
         }}
       /> 
       <Stack.Screen 
-        name='AddPilow'
-        component={AddPilow}
+        name='AddPilowC'
+        component={AddPilowC}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -62,8 +62,8 @@ function HomeNavigator() {
         }}
       /> 
       <Stack.Screen 
-        name='AddRugs'
-        component={AddRugs}
+        name='AddRugsC'
+        component={AddRugsC}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -73,8 +73,8 @@ function HomeNavigator() {
         }}
       /> 
       <Stack.Screen 
-        name='AddBlankets'
-        component={AddBlankets}
+        name='AddBlanketsC'
+        component={AddBlanketsC}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -84,8 +84,8 @@ function HomeNavigator() {
         }}
       /> 
       <Stack.Screen 
-        name='Orders'
-        component={Orders}
+        name='OrderDetails'
+        component={OrderDetails}
         options={{
           headerStyle: {backgroundColor:"#f2e2bd"},
           headerTitle: ()=>(
@@ -94,8 +94,9 @@ function HomeNavigator() {
           ),        
         }}
       /> 
+      
     </Stack.Navigator>
   )
 }
 
-export default HomeNavigator
+export default HomeNavigatorC

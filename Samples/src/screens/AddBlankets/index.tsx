@@ -13,7 +13,7 @@ const AddBlanket = () => {
     setTotalPrice(total);
 
     try {
-      await axios.post('http://192.168.1.118:3000/blankets', {
+      await axios.post('http://192.168.1.127:3000/blankets', {
         customer_id: customerId,
         price_per_square_meter: parseFloat(quantity),
         unit_number: parseFloat(price),

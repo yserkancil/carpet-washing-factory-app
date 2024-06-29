@@ -4,9 +4,221 @@ const cors = require('cors');
 const app = express();
 const connection = require('./db');
 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const SECRET_KEY = 'your_secret_key'; // Bunu güvenli bir yerden alın
+
 app.use(bodyParser.json());
 app.use(cors());
+//müşteri tarafında logout sayfası için
+// Kullanıcı adı ve parolaya göre user_id döndüren endpoint
+app.post('/getuserid', (req, res) => {
+  const { username, password } = req.body;
+  const sql = 'SELECT user_id FROM user WHERE username = ? AND password = ?';
+  connection.query(sql, [username, password], (error, results) => {
+      if (error) {
+          console.error('Error fetching user:', error);
+          res.status(500).json({ error: 'Database error' });
+      } else if (results.length === 0) {
+          res.status(404).json({ error: 'User not found' });
+      } else {
+          res.status(200).json({ user_id: results[0].user_id });
+      }
+  });
+});
+//logout sayfasında hesabı siler
+app.post('/deleteuser', (req, res) => {
+  const { user_id, password } = req.body;
 
+  const sql = 'SELECT * FROM user WHERE user_id = ? AND password = ?';
+  connection.query(sql, [user_id, password], (error, results) => {
+      if (error) {
+          console.error('Error fetching user:', error);
+          res.status(500).json({ error: 'Database error' });
+      } else if (results.length === 0) {
+          res.status(404).json({ message: 'User not found or incorrect password' });
+      } else {
+          const deleteSql = 'DELETE FROM user WHERE user_id = ?';
+          connection.query(deleteSql, [user_id], (deleteError) => {
+              if (deleteError) {
+                  console.error('Error deleting user:', deleteError);
+                  res.status(500).json({ error: 'Database error' });
+              } else {
+                  res.status(200).json({ message: 'User deleted successfully' });
+              }
+          });
+      }
+  });
+});
+
+  // Siparişleri getirmek için endpoint
+  app.get('/users', (req, res) => {
+    let sql = `
+      SELECT 
+        user.*,
+        IFNULL(SUM(customercarpet.carpet_count), 0) AS total_carpets,
+        IFNULL(SUM(customerpilow.pilow_count), 0) AS total_pilows,
+        IFNULL(SUM(customerrug.rug_count), 0) AS total_rugs,
+        IFNULL(SUM(customerblanket.blanket_count), 0) AS total_blankets,
+        orderdetails.date_want,
+        orderdetails.time
+      FROM 
+        user
+      LEFT JOIN customercarpet ON user.user_id = customercarpet.user_id
+      LEFT JOIN customerpilow ON user.user_id = customerpilow.user_id
+      LEFT JOIN customerrug ON user.user_id = customerrug.user_id
+      LEFT JOIN customerblanket ON user.user_id = customerblanket.user_id
+      LEFT JOIN orderdetails ON user.user_id = orderdetails.user_id
+      WHERE orderdetails.date_want IS NOT NULL AND orderdetails.time IS NOT NULL
+      GROUP BY user.user_id, orderdetails.date_want, orderdetails.time
+    `;
+    connection.query(sql, (err, results) => {
+        if (err) throw err;
+        res.json(results);
+    });
+});
+
+
+app.post('/update-status', (req, res) => {
+  const { user_id, state } = req.body;
+  const sql = `
+    INSERT INTO status (user_id, state)
+    VALUES (?, ?)
+    ON DUPLICATE KEY UPDATE state = VALUES(state)
+  `;
+  connection.query(sql, [user_id, state], (err, results) => {
+      if (err) throw err;
+      res.json({ success: true });
+  });
+});
+
+//sipariş durumunu sorgulayan endpoind
+app.get('/status/:user_id', (req, res) => {
+  const userId = req.params.user_id;
+
+  const sql = `SELECT state FROM status WHERE user_id = ? ORDER BY id DESC LIMIT 1`;
+  connection.query(sql, [userId], (error, results) => {
+      if (error) {
+          console.error('Error fetching status:', error);
+          res.status(500).json({ error: 'Database error' });
+      } else if (results.length === 0) {
+          res.status(404).json({ message: 'No status found for the given user_id' });
+      } else {
+          res.status(200).json({ state: results[0].state });
+      }
+  });
+});
+
+//kayıt ve giriş
+app.post('/register', (req, res) => {
+  const { username, password, adres } = req.body;
+  const query = `INSERT INTO user (username, password, adres) VALUES (?, ?, ?)`;
+  console.log('sfdg');
+  connection.query(query, [username, password, adres], (err, result) => {
+      if (err) {
+          return res.status(500).send('Failed to register'+err);
+      }
+      res.send('User registered successfully');
+  });
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const query = `SELECT * FROM user WHERE username = ? AND password = ?`;
+  connection.query(query, [username, password], (err, results) => {
+      if (err) {
+          return res.status(500).send('Failed to authenticate');
+      }
+      if (results.length > 0) {
+          const role = (username === 'Aktepe' && password === 'aktepe') ? 'admin' : 'customer';
+          res.json({ success: true, role });
+      } else {
+          res.status(401).send('Invalid username or password');
+      }
+  });
+});
+
+//müşterinin sepetine halı eklemsi için endpoind
+app.post('/customercarpets', (req, res) => {
+  const { user_id, carpet_count } = req.body;
+  const query = 'INSERT INTO customercarpet (user_id, carpet_count) VALUES (?, ?)';
+  connection.query(query, [user_id, carpet_count], (err, result) => {
+      if (err) {
+          console.error('Error inserting data:', err);
+          res.status(500).send('Failed to add carpet.');
+      } else {
+          res.status(200).send('Carpet added successfully.');
+      }
+  });
+});
+
+//müşterinin sepetine yorgan eklemsi için endpoind
+app.post('/customerpilow', (req, res) => {
+  const { user_id, pilow_count } = req.body;
+  const query = 'INSERT INTO customerpilow (user_id, pilow_count) VALUES (?, ?)';
+  connection.query(query, [user_id, pilow_count], (err, result) => {
+      if (err) {
+          console.error('Error inserting data:', err);
+          res.status(500).send('Failed to add pilow.');
+      } else {
+          res.status(200).send('Pilow added successfully.');
+      }
+  });
+});
+
+
+//müşterinin sepetine kilim eklemsi için endpoind
+app.post('/customerrug', (req, res) => {
+  const { user_id, rug_count } = req.body;
+  const query = 'INSERT INTO customerrug (user_id, rug_count) VALUES (?, ?)';
+  connection.query(query, [user_id, rug_count], (err, result) => {
+      if (err) {
+          console.error('Error inserting data:', err);
+          res.status(500).send('Failed to add rug.');
+      } else {
+          res.status(200).send('rug added successfully.');
+      }
+  });
+});
+
+//müşterinin sepetine battaniye eklemsi için endpoind
+app.post('/customerblanket', (req, res) => {
+  const { user_id, blanket_count } = req.body;
+  const query = 'INSERT INTO customerblanket (user_id, blanket_count) VALUES (?, ?)';
+  connection.query(query, [user_id, blanket_count], (err, result) => {
+      if (err) {
+          console.error('Error inserting data:', err);
+          res.status(500).send('Failed to add blanket.');
+      } else {
+          res.status(200).send('blanket added successfully.');
+      }
+  });
+});
+
+//siparişi tamamlamak için endpoind
+app.post('/orderdetails', (req, res) => {
+  const { user_id, date_want, time } = req.body;
+  const query = 'INSERT INTO orderdetails (user_id, date_want, time) VALUES (?, ?, ?)';
+  connection.query(query, [user_id, date_want, time], (err, result) => {
+      if (err) {
+          console.error('Error inserting data:', err);
+          res.status(500).send('Failed to add order details.');
+      } else {
+          res.status(200).send('Order details added successfully.');
+      }
+  });
+});
+
+
+
+
+
+
+
+
+
+//aşağısı admin tarafındaki işlemler için
 app.get('/customers', (req, res) => {
     const { name_surname } = req.query;
   
@@ -52,6 +264,8 @@ app.get('/customers', (req, res) => {
       LEFT JOIN pillow ON customer.customer_id = pillow.customer_id
       LEFT JOIN blanket ON customer.customer_id = blanket.customer_id
     `;
+
+
   
     // Eğer name_surname parametresi varsa, sorguyu filtrele
     if (name_surname) {
@@ -124,6 +338,7 @@ app.get('/search', (req, res) => {
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+
   });
   
   
@@ -286,7 +501,7 @@ app.post('/pillows', (req, res) => {
 
 //battaniye ekle
 app.post('/blankets', (req, res) => {
-  const { customer_id, unit_number, price_per_square_meter } = req.body;
+  const { customer_id, price_per_square_meter, unit_number } = req.body;
 
   const newBlanket = {
     customer_id,
