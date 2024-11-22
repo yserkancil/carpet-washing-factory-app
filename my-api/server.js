@@ -7,7 +7,7 @@ const connection = require('./db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = 'your_secret_key'; // Bunu güvenli bir yerden alın
+const SECRET_KEY = 'your_secret_key'; 
 
 app.use(bodyParser.json());
 app.use(cors());
